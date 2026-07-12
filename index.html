@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart AI | Chatbot</title>
+    <!-- Google Fonts: Outfit for sleek modern typography, Fira Code for code blocks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-logo">
+                        <i data-lucide="orbit" class="logo-icon animate-spin-slow"></i>
+                    </div>
+                    <div class="brand-name">
+                        <span class="text-gradient">Smart AI</span>
+                        <span class="text-sub">AI CHAT</span>
+                    </div>
+                </div>
+                <button class="btn-icon mobile-only" id="sidebar-close-btn" aria-label="Close Sidebar">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+
+            <button class="btn btn-primary btn-new-chat" id="new-chat-btn">
+                <i data-lucide="plus"></i>
+                <span>New Conversation</span>
+            </button>
+
+            <div class="sessions-section">
+                <h3 class="section-title">Recent Chats</h3>
+                <div class="sessions-list" id="sessions-list">
+                    <!-- Session items will be dynamically injected here -->
+                    <div class="sessions-loading">
+                        <div class="spinner"></div>
+                        <span>Loading history...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="status-indicator" id="status-indicator">
+                    <span class="status-dot warning"></span>
+                    <span class="status-text">Checking system...</span>
+                </div>
+                <div class="app-version">v1.0.0</div>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay for Mobile -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="navbar">
+                <div class="nav-left">
+                    <button class="btn-icon mobile-only" id="sidebar-toggle-btn" aria-label="Open Sidebar">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="chat-title-container">
+                        <h2 class="chat-current-title" id="chat-title">New Conversation</h2>
+                        <p class="chat-subtitle" id="chat-subtitle">Powered by GPT-4</p>
+                    </div>
+                </div>
+                <div class="nav-right">
+                    <button class="btn-icon text-muted hidden" id="delete-chat-btn" title="Delete Conversation"
+                        aria-label="Delete Conversation">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                    <button class="btn-icon text-muted" id="theme-toggle-btn" title="Toggle Theme"
+                        aria-label="Toggle Theme">
+                        <i data-lucide="sun" class="theme-icon-light"></i>
+                        <i data-lucide="moon" class="theme-icon-dark hidden"></i>
+                    </button>
+                    <button class="btn-icon text-muted" id="info-btn" title="About System" aria-label="About System">
+                        <i data-lucide="info"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Message Window -->
+            <section class="chat-window" id="chat-window">
+                <!-- Welcome Screen (Shown when history is empty) -->
+                <div class="welcome-screen" id="welcome-screen">
+                    <div class="welcome-hero">
+                        <div class="hero-logo">
+                            <i data-lucide="sparkles" class="hero-icon animate-pulse"></i>
+                        </div>
+                        <h1 class="welcome-title">Elevate your thoughts with <span class="text-gradient">Smart AI</span>
+                        </h1>
+                        <p class="welcome-tagline">An advanced responsive AI companion. Ask questions, code, write, or
+                            brainstorm.</p>
+                    </div>
+
+                    <div class="suggestion-grid">
+                        <button class="suggestion-card"
+                            data-prompt="Explain quantum computing like I am five years old.">
+                            <div class="card-icon"><i data-lucide="atom"></i></div>
+                            <div class="card-content">
+                                <h4>Explain Quantum Physics</h4>
+                                <p>Break down complex quantum concepts simply.</p>
+                            </div>
+                        </button>
+                        <button class="suggestion-card"
+                            data-prompt="Write a Python script that scrapes headlines from a website using beautifulsoup.">
+                            <div class="card-icon"><i data-lucide="code-2"></i></div>
+                            <div class="card-content">
+                                <h4>Write a Python Script</h4>
+                                <p>Get clean code templates with best practices.</p>
+                            </div>
+                        </button>
+                        <button class="suggestion-card"
+                            data-prompt="Help me design a premium glassmorphic UI card. What CSS styling should I use?">
+                            <div class="card-icon"><i data-lucide="palette"></i></div>
+                            <div class="card-content">
+                                <h4>Design a Glass UI</h4>
+                                <p>Create stunning CSS and layout patterns.</p>
+                            </div>
+                        </button>
+                        <button class="suggestion-card"
+                            data-prompt="What are some creative ways to brainstorm ideas for a science fiction short story?">
+                            <div class="card-icon"><i data-lucide="book-open"></i></div>
+                            <div class="card-content">
+                                <h4>Story Brainstorming</h4>
+                                <p>Spark creative stories and plot outlines.</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages container -->
+                <div class="messages-container" id="messages-container">
+                    <!-- Message items dynamically populated here -->
+                </div>
+
+                <!-- Typing/Loading Indicator -->
+                <div class="typing-indicator-container hidden" id="typing-indicator">
+                    <div class="bot-avatar">
+                        <i data-lucide="bot"></i>
+                    </div>
+                    <div class="typing-bubble">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Chat Input Panel -->
+            <footer class="input-panel">
+                <div class="input-container">
+                    <textarea id="chat-input" placeholder="Message Smart AI..." rows="1" maxlength="4000"
+                        autocomplete="off"></textarea>
+                    <div class="input-actions">
+                        <span class="char-counter" id="char-counter">0 / 4000</span>
+                        <button class="btn-send" id="send-btn" disabled aria-label="Send Message">
+                            <i data-lucide="arrow-up"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-footer">
+                    <span>Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for a new line.</span>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Info / Setup Dialog Overlay -->
+    <div class="modal-overlay hidden" id="info-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>About Smart AI</h3>
+                <button class="btn-icon" id="close-modal-btn" aria-label="Close Info Modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="setup-status-card">
+                    <div class="card-heading">
+                        <i data-lucide="key" class="status-icon-key"></i>
+                        <h4>OpenAI API Settings</h4>
+                    </div>
+                    <p class="status-desc" id="settings-status-text">
+                        The backend reads from a hardcoded API key in `backend/app.py`.
+                    </p>
+                    <div class="status-badge" id="settings-status-badge">
+                        Status: Checking Configuration...
+                    </div>
+                </div>
+
+                <div class="feature-list">
+                    <h4>Core Features Built-In</h4>
+                    <ul>
+                        <li><i data-lucide="check-circle" class="feat-icon"></i> <strong>Context-Aware Conversational
+                                Flow</strong>: Maintains chat history.</li>
+                        <li><i data-lucide="check-circle" class="feat-icon"></i> <strong>Automatic Persistence</strong>:
+                            Writes complete transaction logs locally into <code>conversations.json</code>.</li>
+                        <li><i data-lucide="check-circle" class="feat-icon"></i> <strong>Responsive Layout</strong>:
+                            Works perfectly on Mobile, Tablet, and Desktop displays.</li>
+                        <li><i data-lucide="check-circle" class="feat-icon"></i> <strong>Session Management</strong>:
+                            Manage multiple session contexts, switch between chats, or delete older records.</li>
+                    </ul>
+                </div>
+
+                <div class="how-to-configure">
+                    <h4>How to Configure Your OpenAI API Key</h4>
+                    <p>To connect to GPT-4, update the <code>OPENAI_API_KEY</code> variable in the file:</p>
+                    <pre><code>backend/app.py</code></pre>
+                    <p>Locate the variable on line 20 and replace the placeholder value:</p>
+                    <pre><code>OPENAI_API_KEY = "sk-..."</code></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modal-ok-btn">Understood</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast System -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script>
+        // Initialize Lucide icons on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>
